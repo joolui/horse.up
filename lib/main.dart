@@ -12,9 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Horse.UP',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       home: MyHomePage(title: 'Horse.UP'),
     );
@@ -22,9 +22,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  AudioPlayer advancedPlayer = AudioPlayer();
-  String localFilePath;
-
   MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
 
@@ -34,10 +31,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   AudioCache audioCache = AudioCache();
-  AudioPlayer advancedPlayer = AudioPlayer();
+  AudioPlayer futasPlayer = AudioPlayer();
+  AudioPlayer hangokPlayer = AudioPlayer();
 
-  _play_sound1() {}
-
+  File audioFile;
 
   @override
   void initState() {
@@ -51,102 +48,103 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: GestureDetector(
-                onTap: _play_sound1(),
-                child: Text(
-                  'Sound 1',
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .headline,
-                ),
-              ),
-            ),
-            Column(children: [
-              Text('Volume'),
-              Row(children: [
-                _Btn(
-                    txt: '0.0',
-                    onPressed: () => widget.advancedPlayer.setVolume(0.0)),
-                _Btn(
-                    txt: '0.5',
-                    onPressed: () => widget.advancedPlayer.setVolume(0.5)),
-                _Btn(
-                    txt: '1.0',
-                    onPressed: () => widget.advancedPlayer.setVolume(1.0)),
-                _Btn(
-                    txt: '2.0',
-                    onPressed: () => widget.advancedPlayer.setVolume(2.0)),
-              ], mainAxisAlignment: MainAxisAlignment.spaceEvenly),
-            ]),
-            Text('Play Local Asset \'audio.mp3\':'),
-            _Btn(txt: 'Play', onPressed: () => audioCache.play('audio.mp3')),
-            Text('Loop Local Asset \'audio.mp3\':'),
-            _Btn(txt: 'Loop', onPressed: () => audioCache.loop('audio.mp3')),
-            Text('Play Local Asset \'audio2.mp3\':'),
-            _Btn(txt: 'Play', onPressed: () => audioCache.play('audio2.mp3')),
-            Text('Play Local Asset In Low Latency \'audio.mp3\':'),
-            _Btn(
-                txt: 'Play',
-                onPressed: () =>
-                    audioCache.play('audio.mp3',
-                        mode: PlayerMode.LOW_LATENCY)),
-            Text(
-                'Play Local Asset Concurrently In Low Latency \'audio.mp3\':'),
-            _Btn(
-                txt: 'Play',
-                onPressed: () async {
-                  await audioCache.play('audio.mp3',
-                      mode: PlayerMode.LOW_LATENCY);
-                  await audioCache.play('audio2.mp3',
-                      mode: PlayerMode.LOW_LATENCY);
-                }),
-            Text('Play Local Asset In Low Latency \'audio2.mp3\':'),
-            _Btn(
-                txt: 'Play',
-                onPressed: () =>
-                    audioCache.play('audio2.mp3',
-                        mode: PlayerMode.LOW_LATENCY)),
-            getLocalFileDuration(),
-          ],
-        ),
+        child: Column(children: [
+          getHangeroszabalyozo(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              getHangok(),
+              getMozgas(),
+            ],
+          )
+        ]),
       ),
     );
   }
 
-
-  Future<int> _getDuration() async {
-    File audiofile = await audioCache.load('audio2.mp3');
-    await advancedPlayer.setUrl(
-      audiofile.path,
-    );
-    int duration = await Future.delayed(
-        Duration(seconds: 2), () => advancedPlayer.getDuration());
-    return duration;
+  Widget getHangeroszabalyozo() {
+    return Column(children: [
+      Text(
+        'Volume',
+        style: Theme
+            .of(context)
+            .textTheme
+            .headline,
+      ),
+      Row(children: [
+        _Btn(txt: '0.5', onPressed: () => futasPlayer.setVolume(0.5)),
+        _Btn(txt: '1.0', onPressed: () => futasPlayer.setVolume(1.0)),
+      ], mainAxisAlignment: MainAxisAlignment.spaceEvenly),
+    ]);
   }
 
-  getLocalFileDuration() {
-    return FutureBuilder<int>(
-      future: _getDuration(),
-      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return Text('No Connection...');
-          case ConnectionState.active:
-          case ConnectionState.waiting:
-            return Text('Awaiting result...');
-          case ConnectionState.done:
-            if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-            return Text(
-                'audio2.mp3 duration is: ${Duration(
-                    milliseconds: snapshot.data)}');
-        }
-        return null; // unreachable
-      },
+  Widget getHangok() {
+    return Column(
+      children: <Widget>[
+        Text(
+          'Hangok',
+          style: Theme
+              .of(context)
+              .textTheme
+              .headline,
+        ),
+        SizedBox(height: 10),
+        _ImageBtn(
+            txt: 'assets/horse_brr.jpg',
+            onPressed: () async {
+              audioFile = await audioCache.load('Brrr2.ogg');
+              return hangokPlayer.play(audioFile.path);
+            }),
+        SizedBox(height: 30),
+        _ImageBtn(
+            txt: 'assets/horse_laughinh.jpg',
+            onPressed: () async {
+              audioFile = await audioCache.load('Nyihaha3.mp3');
+              return hangokPlayer.play(audioFile.path);
+            }),
+        SizedBox(height: 10),
+        _Btn(
+            txt: 'Stop',
+            onPressed: () async {
+              return hangokPlayer.release();
+            }),
+      ],
+    );
+  }
+
+  Widget getMozgas() {
+    return Column(
+      children: <Widget>[
+        Text(
+          'Mozgás',
+          style: Theme
+              .of(context)
+              .textTheme
+              .headline,
+        ),
+        SizedBox(height: 10),
+        _ImageBtn(
+            txt: 'assets/running_horse.jpg',
+            onPressed: () async {
+              audioFile = await audioCache.load('Futas4.mp3');
+              futasPlayer.setReleaseMode(ReleaseMode.LOOP);
+              return futasPlayer.play(audioFile.path);
+            }),
+        SizedBox(height: 30),
+        _ImageBtn(
+            txt: 'assets/horse_walking.jpg',
+            onPressed: () async {
+              audioFile = await audioCache.load('Gyalog1.ogg');
+              futasPlayer.setReleaseMode(ReleaseMode.LOOP);
+              return futasPlayer.play(audioFile.path);
+            }),
+        SizedBox(height: 10),
+        _Btn(
+            txt: 'Stop',
+            onPressed: () async {
+              return futasPlayer.release();
+            }),
+      ],
     );
   }
 }
@@ -160,7 +158,36 @@ class _Btn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
-        minWidth: 48.0,
-        child: RaisedButton(child: Text(txt), onPressed: onPressed));
+      minWidth: 48.0,
+      child: RaisedButton(
+        child: Text(
+          txt,
+          style: Theme
+              .of(context)
+              .textTheme
+              .headline,
+        ),
+        onPressed: onPressed,
+      ),
+    );
+  }
+}
+
+class _ImageBtn extends StatelessWidget {
+  final String txt;
+  final VoidCallback onPressed;
+
+  const _ImageBtn({Key key, this.txt, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      child: Image.asset(
+        txt,
+        width: 150,
+        height: 150,
+      ),
+      onPressed: onPressed,
+    );
   }
 }

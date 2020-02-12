@@ -43,9 +43,14 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/audio.mp3
-    - assets/audio2.mp3
-    - assets/messenger.mp3
+    - assets/Brrr2.ogg
+    - assets/Futas4.mp3
+    - assets/Gyalog1.ogg
+    - assets/Nyihaha3.mp3
+    - assets/horse_brr.jpg
+    - assets/horse_laughinh.jpg
+    - assets/horse_walking.jpg
+    - assets/running_horse.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
